@@ -394,13 +394,15 @@ async def get_image(message):
                     await bot.send_message(message.chat.id,
                         "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
 
-                    await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                    if GET_DEBUG_INFO:
+                        await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
 
             except Exception as err:
                 await bot.send_message(message.chat.id,
                         "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
 
-                await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                if GET_DEBUG_INFO:
+                    await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
             
 
             await bot.send_message(message.chat.id,
@@ -451,13 +453,15 @@ async def get_image(message):
                     await bot.send_message(message.chat.id,
                         "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
 
-                    await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                    if GET_DEBUG_INFO:
+                        await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
 
             except Exception as err:
                 await bot.send_message(message.chat.id,
                         "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
 
-                await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                if GET_DEBUG_INFO:
+                    await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
 
 
             await bot.send_message(message.chat.id,
@@ -491,13 +495,15 @@ async def get_image(message):
                     await bot.send_message(message.chat.id,
                         "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
 
-                    await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                    if GET_DEBUG_INFO:
+                        await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
 
         except Exception as err:
             await bot.send_message(message.chat.id,
                         "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
 
-            await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+            if GET_DEBUG_INFO:
+                await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
 
 
         await bot.send_message(message.chat.id,
@@ -546,7 +552,7 @@ def tensor2img(t):
     output = Image.fromarray(np.uint8(output * 255))
 
     bio = BytesIO()
-    bio.name = 'image.jpeg'
+    bio.name = 'result.jpeg'
     output.save(bio, 'JPEG')
     bio.seek(0)
 
@@ -558,6 +564,8 @@ def log(user):
         print()
         print('type: ', user.st_type)
         print('settings: ', user.settings)
+        if user.st_type == 1 or user.st_type == 2:
+            print('Epochs:')
 
 
 def draw_img(img):

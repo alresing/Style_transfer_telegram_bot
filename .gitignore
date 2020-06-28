@@ -1,5 +1,8 @@
-__pycache__/
 /config.py
 /Procfile
+/deepmux_try.py
 /runtime.txt
-/old_git_backup
+
+__pycache__/
+/old_git_backup/
+/checkpoints/experiment_name/
