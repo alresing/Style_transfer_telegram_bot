@@ -1,6 +1,8 @@
 # Style_transfer_telegram_bot
 Этот бот для телеграмма переносит стиль с одних фотографий на другие.
 
+Пообщаться с ботом в телеграме: @AlresingFirstBot.
+
 ## Режимы работы бота
 
 У бота есть 3 режима работы:
@@ -85,7 +87,7 @@
 ```Python
   API_TOKEN = '<YOUR TOKEN>'
 
-  DEBUG_ID = `<YOUR_DEBUG_ID>`
+  DEBUG_ID = '<YOUR_DEBUG_ID>'
   
   GET_DEBUG_INFO = True
 
