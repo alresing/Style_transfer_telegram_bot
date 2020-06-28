@@ -28,7 +28,10 @@
   
 Возможные результаты работы данного режима бота:
 
-*фото*
+Изначальное изображение    |  Переносимый стиль        |  Итоговое изображение
+:-------------------------:|:-------------------------:|:-------------------------:
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi.jpg" height="250">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_1.jpg" height="250">  |   <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi_st_1.jpeg" height="250">
+
 
 ### Двойной перенос стиля с двух изображений на третье
 В данном режиме бот переносит первый стиль на левую половину фото, второй стиль -- на правую. 
@@ -50,7 +53,10 @@
   
 Возможные результаты работы данного режима бота:
   
-*фото*
+Изначальное изображение    |  Первый переносимый стиль |  Первый переносимый стиль |  Итоговое изображение
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi.jpg" height="200">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_1.jpg" height="200">  |   <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_2.jpg" height="200">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi_st_2.jpeg" height="200">
+
   
 ### Перекрашивание лошадей в зебр
 В данном режиме бот раскрашивает лошадей на фото в полоски так, чтобы они были похожи на зебр, используя предобученную генеративную сеть. 
@@ -65,7 +71,11 @@
   
 Возможные результаты работы данного режима боты:
 
-*фото*
+Изначальное изображение    |  Итоговое изображение
+:-------------------------:|:-------------------------:
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/horse_1.jpg" height="250">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/zebra_1.jpeg" height="250">
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/horse_2.jpg" height="250">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/zebra_2.jpeg" height="250">
+
 
 ## Информация по запуску бота.
 Для запуска данного бота у себя необходимо добавить в основной каталог файл `config.py` со следующим содержанием:
