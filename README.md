@@ -95,7 +95,7 @@
 
   LOGGING_GAN = False
 
-  MODE = 'EASY'
+  MODE = 'NORMAL'
 ```
 
 Где:
