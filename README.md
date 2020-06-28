@@ -53,9 +53,9 @@
   
 Возможные результаты работы данного режима бота:
   
-Изначальное изображение    |  Первый переносимый стиль |  Первый переносимый стиль |  Итоговое изображение
+Изначальное изображение    |  Первый переносимый стиль |  Второй переносимый стиль |  Итоговое изображение
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi.jpg" height="170" width="170">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_1.jpg" height="170" width="123">  |   <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_2.jpg" height="170" width="170">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi_st_2.jpeg" height="170" width="170">
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi.jpg" height="170" width="170">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_2.jpg" height="170" width="123">  |   <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_1.jpg" height="170" width="170">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi_st_2.jpeg" height="170" width="170">
 
   
 ### Перекрашивание лошадей в зебр
