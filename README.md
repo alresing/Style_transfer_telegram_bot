@@ -30,7 +30,7 @@
 
 Изначальное изображение    |  Переносимый стиль        |  Итоговое изображение
 :-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi.jpg" height="250">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_1.jpg" height="250">  |   <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi_st_1.jpeg" height="250">
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi.jpg" height="250" width="250">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_1.jpg" height="250" width="181">  |   <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi_st_1.jpeg" height="250"  width="250">
 
 
 ### Двойной перенос стиля с двух изображений на третье
@@ -55,7 +55,7 @@
   
 Изначальное изображение    |  Первый переносимый стиль |  Первый переносимый стиль |  Итоговое изображение
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi.jpg" height="200">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_1.jpg" height="200">  |   <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_2.jpg" height="200">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi_st_2.jpeg" height="200">
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi.jpg" height="170" width="170">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_1.jpg" height="170" width="123">  |   <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/style_2.jpg" height="170" width="170">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/corgi_st_2.jpeg" height="170" width="170">
 
   
 ### Перекрашивание лошадей в зебр
@@ -73,8 +73,8 @@
 
 Изначальное изображение    |  Итоговое изображение
 :-------------------------:|:-------------------------:
-<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/horse_1.jpg" height="250">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/zebra_1.jpeg" height="250">
-<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/horse_2.jpg" height="250">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/zebra_2.jpeg" height="250">
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/horse_1.jpg" height="250" width="375">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/zebra_1.jpeg" height="250"  width="250">
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/horse_2.jpg" height="250" width="378">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/zebra_2.jpeg" height="250"  width="250">
 
 
 ## Информация по запуску бота.
