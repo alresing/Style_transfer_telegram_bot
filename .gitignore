@@ -4,5 +4,4 @@
 /runtime.txt
 
 __pycache__/
-/old_git_backup/
 /checkpoints/experiment_name/
