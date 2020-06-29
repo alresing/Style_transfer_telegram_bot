@@ -19,7 +19,9 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 import torchvision.models as models
 
+import os
 from copy import deepcopy
+from urllib.parse import urljoin
 
 from style_transfer import *
 import gan
@@ -189,8 +191,8 @@ async def default_set(callback_query):
     if MODE == 'EASY':
         await bot.send_message(callback_query.from_user.id, 
             "В данный момент бот работает в упрощенном режиме, для получения полного функционала бота " +
-            "свяжись с создателем бота с целью перевести бота в нормальный режим работы. " + 
-            "Пока можешь ознакомится с меню данного бота или посетить профиль на github: " +
+            "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы. " + 
+            "Пока можете ознакомится с меню или посетить страницу на github: " +
             "https://github.com/alresin/Style_transfer_telegram_bot")
 
         await bot.send_message(callback_query.from_user.id,
@@ -290,8 +292,8 @@ async def load_images(callback_query):
     if MODE == 'EASY':
         await bot.send_message(callback_query.from_user.id, 
             "В данный момент бот работает в упрощенном режиме, для получения полного функционала бота " +
-            "свяжись с создателем бота с целью перевести бота в нормальный режим работы. " + 
-            "Пока можешь ознакомится с меню данного бота или посетить профиль на github: " +
+            "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы. " + 
+            "Пока можете ознакомится с меню или посетить страницу на github: " +
             "https://github.com/alresin/Style_transfer_telegram_bot")
 
         await bot.send_message(callback_query.from_user.id,
@@ -369,14 +371,15 @@ async def get_image(message):
     if MODE == 'EASY':
         await bot.send_message(message.chat.id, 
             "В данный момент бот работает в упрощенном режиме, для получения полного функционала бота " +
-            "свяжись с создателем бота с целью перевести бота в нормальный режим работы. " + 
-            "Пока можешь ознакомится с меню данного бота или посетить профиль на github: " +
+            "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы. " + 
+            "Пока можете ознакомится с меню или посетить страницу на github: " +
             "https://github.com/alresin/Style_transfer_telegram_bot")
 
         await bot.send_message(message.chat.id,
             "Что будем делать дальше?", reply_markup=start_kb)
             
-        del photo_buffer[message.chat.id]
+        if message.chat.id in photo_buffer:
+            del photo_buffer[message.chat.id]
 
 
     elif MODE == 'NORMAL':
@@ -575,6 +578,21 @@ async def get_text(message):
         "Я тебя не понимаю. Вот что я могу:", reply_markup=start_kb)
 
 
+async def on_startup(dispatcher):
+    logging.warning('Starting...')
+
+    await bot.set_webhook(webhook_url)
+
+
+async def on_shutdown(dispatcher):
+    logging.warning('Shutting down...')
+    logging.warning('Bye!')
+
+
+########################################################
+# STYLE TRANSFER PART
+
+
 async def style_transfer(st_class, user,*imgs):
     st = st_class(*imgs,
             imsize = user.settings['imsize'],
@@ -628,4 +646,26 @@ def draw_photo(*photos):
 
 
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    if CONNECTION_TYPE == 'POLLING':
+        executor.start_polling(dp, skip_updates=True)
+
+    elif CONNECTION_TYPE == 'WEBHOOKS':
+        # webhook setting
+        webhook_path = f'/webhook/{API_TOKEN}'
+        webhook_url  = urljoin(WEBHOOK_HOST, webhook_path)
+
+        # webserver setting
+        webapp_host = '0.0.0.0'
+        webapp_port = int(os.environ.get('PORT', WEBAPP_PORT))
+
+        executor.start_webhook(
+            dispatcher=dp,
+            webhook_path=webhook_path,
+            on_startup=on_startup,
+            on_shutdown=on_shutdown,
+            skip_updates=True,
+            host=webapp_host,
+            port=webapp_port)
+
+    else:
+        print("Invalid 'CONNECTION_TYPE'")
