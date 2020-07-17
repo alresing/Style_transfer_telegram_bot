@@ -8,7 +8,6 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 import torchvision.transforms as transforms
-import torchvision.models as models
 
 import copy
 
@@ -192,7 +191,7 @@ class Simple_style_transfer:
         global CNN
 
         if CNN == '':
-            CNN = models.vgg19(pretrained=True).features.to(self.device).eval()
+            CNN = torch.load('my_models/vgg19.pth',).to(self.device).eval()
 
         model, style_losses, content_losses = self.get_style_model_and_losses()
         optimizer = self.get_input_optimizer()
@@ -336,7 +335,7 @@ class Double_style_transfer():
         global CNN
 
         if CNN == '':
-            CNN = models.vgg19(pretrained=True).features.to(self.device).eval()
+            CNN = torch.load('my_models/vgg19.pth').to(self.device).eval()
 
         model, style_losses, content_losses = self.get_style_model_and_losses()
         optimizer = self.get_input_optimizer()

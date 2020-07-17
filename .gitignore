@@ -1,7 +1,18 @@
-/config.py
-/Procfile
 /deepmux_try.py
-/runtime.txt
+/corgi.jpg
+/save_weights_from_model.py
 
 __pycache__/
-/checkpoints/experiment_name/
+/checkpoints/
+/images/
+/data/
+/models/
+/options/
+/util/
+
+
+my_models/horse2zebra.pth
+my_models/monet.pth
+my_models/summer2winter.pth
+my_models/vangogh.pth
+my_models/winter2summer.pth

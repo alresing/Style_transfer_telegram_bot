@@ -1,47 +1,29 @@
-import os
-from options.test_options import TestOptions
-from models import create_model
-
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torchvision.transforms as transforms
 from PIL import Image
 
+import os
 
-def transfer(img_path, imsize = 256, logging = True):
-    opt = TestOptions(logging).parse()  # get test options
 
-    # hard-code some parameters for test
-    opt.num_threads = 0   # test code only supports num_threads = 1
-    opt.batch_size = 1    # test code only supports batch_size = 1
-    opt.serial_batches = True  # disable data shuffling; comment this line if results on randomly chosen images are needed.
-    opt.no_flip = True    # no flip; comment this line if results on flipped images are needed.
-    opt.display_id = -1   # no visdom display; the test code saves the results to a HTML file.
-    
-    opt.dataroot = ''
-    opt.name = 'horse2zebra_pretrained'        # name of folder with model
-    opt.model = 'test'
-    opt.no_dropout = True
-
-    opt.crop_size = imsize
-    opt.load_size = imsize
-
-    model = create_model(opt, logging)      # create a model given opt.model and other options
-    model.setup(opt)               # regular setup: load and print networks; create schedulers
-    
-    img = image_loader(img_path, imsize)
-    data = {'A': img, 'A_paths': ''}
-    model.set_input(data)
-    model.test()
-    visuals = model.get_current_visuals()  # get image results
-
-    return visuals['fake']
-
-        
-def image_loader(image_name, imsize):
+def transfer(img_path, style, imsize = 256, logging = True):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    # m1 = torch.load('./my_models/vgg19.pth')
+    # m2 = torch.load('./my_models/horse2zebra_new.pth')
+
+
+    model = torch.load('./my_models/' + style + '_new.pth').to(device)
+    img = image_loader(img_path, imsize, device)
+
+    for p in model.parameters():
+        p.requires_grad = False
+
+    return model(img)
+
+        
+def image_loader(image_name, imsize, device):
     loader = transforms.Compose([
         transforms.Resize(imsize),
         transforms.CenterCrop(imsize),
@@ -59,5 +41,6 @@ def draw_img(img):
 
 if __name__ == '__main__':
     # for test
-    # draw_img(transfer('./corgi_800x800.jpg'))
+    #draw_img(transfer('./corgi.jpg'))
+
     pass

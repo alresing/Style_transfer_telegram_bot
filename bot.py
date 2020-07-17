@@ -16,15 +16,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
-import torchvision.transforms as transforms
-import torchvision.models as models
-
 import os
 from copy import deepcopy
 from urllib.parse import urljoin
 
 from style_transfer import *
-import gan
+from gan import transfer
 from config import *
 
 
@@ -55,6 +52,11 @@ start_kb.add( InlineKeyboardButton('Перенос двух стилей (NST)',
                                     callback_data='2_st') )
 start_kb.add( InlineKeyboardButton('Перекрасить лошадь в зебру (GAN)',
                                     callback_data='horse2zebra'))
+start_kb.add( InlineKeyboardButton('Стилизация под Ван Гога (GAN)',
+                                    callback_data='vangogh'))
+start_kb.add( InlineKeyboardButton('Стилизация под Моне (GAN)',
+                                    callback_data='monet'))
+
 
 settings1_kb = InlineKeyboardMarkup()
 settings1_kb.add( InlineKeyboardButton('Стандартные',
@@ -185,6 +187,38 @@ async def horse2zebra(callback_query):
     photo_buffer[callback_query.from_user.id].st_type = 'horse2zebra'
 
 
+# vangogh
+@dp.callback_query_handler(lambda c: c.data == 'vangogh')
+async def vangogh(callback_query):
+    await bot.answer_callback_query(callback_query.id)
+
+    await callback_query.message.edit_text(
+        "Твоя картинка будет стилизована под стиль Ван Гога. " +
+        "Выбери настройки для переноса стиля:")
+    await callback_query.message.edit_reply_markup(reply_markup = settings1_kb)
+
+    if callback_query.from_user.id not in photo_buffer:
+        photo_buffer[callback_query.from_user.id] = InfoAboutUser()
+
+    photo_buffer[callback_query.from_user.id].st_type = 'vangogh'
+
+
+# monet
+@dp.callback_query_handler(lambda c: c.data == 'monet')
+async def winter2summer(callback_query):
+    await bot.answer_callback_query(callback_query.id)
+
+    await callback_query.message.edit_text(
+        "Твоя картинка будет стилизована под стиль Моне. " +
+        "Выбери настройки для переноса стиля:")
+    await callback_query.message.edit_reply_markup(reply_markup = settings1_kb)
+
+    if callback_query.from_user.id not in photo_buffer:
+        photo_buffer[callback_query.from_user.id] = InfoAboutUser()
+
+    photo_buffer[callback_query.from_user.id].st_type = 'monet'
+
+
 # default settings
 @dp.callback_query_handler(lambda c: c.data == 'default')
 async def default_set(callback_query):
@@ -226,6 +260,20 @@ async def default_set(callback_query):
                 "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
             photo_buffer[callback_query.from_user.id].need_photos = 1
+
+        elif photo_buffer[callback_query.from_user.id].st_type == 'vangogh':
+            await callback_query.message.edit_text(
+                "Пришли мне фотографию, и я добавлю на нее стиль Ван Гога. " +
+                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
+
+            photo_buffer[callback_query.from_user.id].need_photos = 1
+
+        elif photo_buffer[callback_query.from_user.id].st_type == 'monet':
+            await callback_query.message.edit_text(
+                "Пришли мне фотографию, и я добавлю на нее стиль Моне. " +
+                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
+
+            photo_buffer[callback_query.from_user.id].need_photos = 1
         
         await callback_query.message.edit_reply_markup(reply_markup=cancel_kb)
 
@@ -237,7 +285,7 @@ async def default_set(callback_query):
 async def castom_set(callback_query):
     await bot.answer_callback_query(callback_query.id)
 
-    if photo_buffer[callback_query.from_user.id].st_type == 'horse2zebra':
+    if photo_buffer[callback_query.from_user.id].st_type in ['horse2zebra', 'vangogh', 'monet']:
         await callback_query.message.edit_text(
             "Текущие настройки:" + 
             "\nРазмер изображения: " + str(photo_buffer[callback_query.from_user.id].settings['imsize']) +
@@ -270,7 +318,7 @@ async def set_num_epochs(callback_query):
 async def set_num_epochs(callback_query):
     await bot.answer_callback_query(callback_query.id)
 
-    if photo_buffer[callback_query.from_user.id].st_type == 'horse2zebra':
+    if photo_buffer[callback_query.from_user.id].st_type in ['horse2zebra', 'vangogh', 'monet']:
         await callback_query.message.edit_text(
             "Текущие настройки:" + 
             "\nРазмер изображения: " + str(photo_buffer[callback_query.from_user.id].settings['imsize']) +
@@ -325,11 +373,25 @@ async def load_images(callback_query):
                 "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
             photo_buffer[callback_query.from_user.id].need_photos = 1
+
+        elif photo_buffer[callback_query.from_user.id].st_type == 'vangogh':
+            await callback_query.message.edit_text(
+                "Пришли мне фотографию, и я добавлю на нее стиль Ван Гога. " +
+                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
+
+            photo_buffer[callback_query.from_user.id].need_photos = 1
+
+        elif photo_buffer[callback_query.from_user.id].st_type == 'monet':
+            await callback_query.message.edit_text(
+                "Пришли мне фотографию, и я добавлю на нее стиль Моне. " +
+                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
+
+            photo_buffer[callback_query.from_user.id].need_photos = 1
         
         await callback_query.message.edit_reply_markup(reply_markup=cancel_kb)
 
 
-# changing epchos number
+# changing epochs number
 @dp.callback_query_handler(lambda c: c.data[:11] == 'num_epochs_')
 async def change_num_epochs(callback_query):
     await bot.answer_callback_query(callback_query.id)
@@ -349,7 +411,7 @@ async def change_imsize(callback_query):
     await bot.answer_callback_query(callback_query.id)
     photo_buffer[callback_query.from_user.id].settings['imsize'] = int(callback_query.data[7:])
 
-    if photo_buffer[callback_query.from_user.id].st_type == 'horse2zebra':
+    if photo_buffer[callback_query.from_user.id].st_type in ['horse2zebra', 'vangogh', 'monet']:
         await callback_query.message.edit_text(
             "Текущие настройки:" + 
             "\nРазмер изображения: " + str(photo_buffer[callback_query.from_user.id].settings['imsize']) +
@@ -440,19 +502,24 @@ async def get_image(message):
                             "в расширенных настройках.")
                         
                     else:
-                        await bot.send_message(message.chat.id,
-                            "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
-
                         if GET_DEBUG_INFO:
                             await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                            await bot.send_message(message.chat.id,
+                                "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
+
+                        else:
+                            await bot.send_message(message.chat.id,
+                                    "Произошла ошибка.")
 
                 except Exception as err:
-                    await bot.send_message(message.chat.id,
-                            "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
-
                     if GET_DEBUG_INFO:
+                        await bot.send_message(message.chat.id,
+                                "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
                         await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
-                
+
+                    else:
+                        await bot.send_message(message.chat.id,
+                                "Произошла ошибка.")
 
                 await bot.send_message(message.chat.id,
                     "Что будем делать дальше?", reply_markup=start_kb)
@@ -499,18 +566,24 @@ async def get_image(message):
                             "в расширенных настройках.")
 
                     else:
-                        await bot.send_message(message.chat.id,
-                            "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
-
                         if GET_DEBUG_INFO:
                             await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                            await bot.send_message(message.chat.id,
+                                "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
+
+                        else:
+                            await bot.send_message(message.chat.id,
+                                    "Произошла ошибка.")
 
                 except Exception as err:
-                    await bot.send_message(message.chat.id,
-                            "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
-
                     if GET_DEBUG_INFO:
                         await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                        await bot.send_message(message.chat.id,
+                                "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
+
+                    else:
+                        await bot.send_message(message.chat.id,
+                                "Произошла ошибка.")
 
 
                 await bot.send_message(message.chat.id,
@@ -518,21 +591,24 @@ async def get_image(message):
 
                 del photo_buffer[message.chat.id]
 
-        # GAN horse2zebra
-        elif photo_buffer[message.chat.id].st_type == 'horse2zebra' and \
+        # GAN horse2zebra or vangogh or monet
+        elif photo_buffer[message.chat.id].st_type in ['horse2zebra', 'vangogh', 'monet'] and \
             photo_buffer[message.chat.id].need_photos == 1:
             await bot.send_message(message.chat.id, "Начинаю обрабатывать...")
 
             # for debug
             log(photo_buffer[message.chat.id])
 
-            try:
-                output = gan_horse2zebra(photo_buffer[message.chat.id],
+            output = gan_transfer(photo_buffer[message.chat.id],
                                         photo_buffer[message.chat.id].photos[0])
 
-                await bot.send_document(message.chat.id, deepcopy(output))
-                await bot.send_photo(message.chat.id, output)
+            await bot.send_document(message.chat.id, deepcopy(output))
+            await bot.send_photo(message.chat.id, output)
 
+            '''
+            try:
+                
+                
             except RuntimeError as err:
                     if str(err)[:19] == 'CUDA out of memory.':
                         await bot.send_message(message.chat.id,
@@ -541,11 +617,14 @@ async def get_image(message):
                             "в расширенных настройках.")
                         
                     else:
-                        await bot.send_message(message.chat.id,
-                            "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
-
                         if GET_DEBUG_INFO:
                             await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                            await bot.send_message(message.chat.id,
+                                "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
+
+                        else:
+                            await bot.send_message(message.chat.id,
+                                    "Произошла ошибка.")
 
             except Exception as err:
                 await bot.send_message(message.chat.id,
@@ -553,13 +632,13 @@ async def get_image(message):
 
                 if GET_DEBUG_INFO:
                     await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+            '''
 
 
             await bot.send_message(message.chat.id,
                     "Что будем делать дальше?", reply_markup=start_kb)
 
             del photo_buffer[message.chat.id]
-
 
 
 # text error
@@ -604,8 +683,9 @@ async def style_transfer(st_class, user,*imgs):
     return tensor2img(output)
     
 
-def gan_horse2zebra(user, img):
-    output = gan.transfer(img,
+def gan_transfer(user, img):
+    output = transfer(img,
+            style = user.st_type,
             imsize = user.settings['imsize'],
             logging = LOGGING_GAN)
 
@@ -628,9 +708,11 @@ def log(user):
     if LOGGING:
         print()
         print('type: ', user.st_type)
-        print('settings: ', user.settings)
         if user.st_type == 1 or user.st_type == 2:
+            print('settings:', user.settings)
             print('Epochs:')
+        else:
+            print('settings: imsize:', user.settings['imsize'])
 
 
 def draw_img(img):
