@@ -707,7 +707,7 @@ def tensor2img(t):
 def log(user):
     if LOGGING:
         print()
-        print('type: ', user.st_type)
+        print('type:', user.st_type)
         if user.st_type == 1 or user.st_type == 2:
             print('settings:', user.settings)
             print('Epochs:')

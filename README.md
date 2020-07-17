@@ -98,6 +98,11 @@
   
 Возможные результаты работы данного режима бота:
 
+Изначальное изображение    |  Итоговое изображение
+:-------------------------:|:-------------------------:
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/field.jpg" height="250" width="375">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/vangogh_1.jpeg" height="250"  width="250">
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/nature.jpg" height="250" width="378">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/vangogh_2.jpeg" height="250"  width="250">
+
 
 ### Стилизация изображений под картины Моне
 В данном режиме бот перерисовывает данное ему изображение так, чтобы оно было похоже по стилю на картины Моне. При этом бот  использует предобученную генеративную сеть из этого проекта: https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix.
@@ -112,6 +117,11 @@
   - 512х512 пикселей
   
 Возможные результаты работы данного режима бота:
+
+Изначальное изображение    |  Итоговое изображение
+:-------------------------:|:-------------------------:
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/flowers.jpg" height="250" width="375">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/monet_1.jpeg" height="250"  width="250">
+<img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/rocks.jpg" height="250" width="378">  |  <img src="https://github.com/alresin/Style_transfer_telegram_bot/blob/master/images/monet_2.jpeg" height="250"  width="250">
 
 
 ## Информация по запуску бота
