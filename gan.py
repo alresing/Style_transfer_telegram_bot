@@ -10,11 +10,7 @@ import os
 def transfer(img_path, style, imsize = 256, logging = True):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # m1 = torch.load('./my_models/vgg19.pth')
-    # m2 = torch.load('./my_models/horse2zebra_new.pth')
-
-
-    model = torch.load('./my_models/' + style + '_new.pth').to(device)
+    model = torch.load('./my_models/' + style + '.pth').to(device)
     img = image_loader(img_path, imsize, device)
 
     for p in model.parameters():

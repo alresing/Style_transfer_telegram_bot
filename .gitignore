@@ -1,16 +1,11 @@
 /deepmux_try.py
 /corgi.jpg
+/README.md
 /save_weights_from_model.py
 
 __pycache__/
 /checkpoints/
+/images/
 /data/
-/models/
 /options/
 /util/
-
-my_models/horse2zebra.pth
-my_models/monet.pth
-my_models/summer2winter.pth
-my_models/vangogh.pth
-my_models/winter2summer.pth

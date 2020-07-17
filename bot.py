@@ -224,60 +224,52 @@ async def winter2summer(callback_query):
 async def default_set(callback_query):
     if MODE == 'EASY':
         await bot.send_message(callback_query.from_user.id, 
-            "В данный момент бот работает в упрощенном режиме, для получения полного функционала бота " +
-            "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы. " + 
-            "Пока можете ознакомится с меню или посетить страницу на github: " +
-            "https://github.com/alresin/Style_transfer_telegram_bot")
+            "В данный момент бот работает в упрощенном режиме. Это означает, что для некоторых операций " + 
+            "боту может не хватить памяти. В такие моменты бот может просто не прислать ответ. " +
+            "Также в данном режиме бот осуществляет NST весьма продолжительное время. " +
+            "Для получения полного функционала бота " +
+            "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы.")
 
-        await bot.send_message(callback_query.from_user.id,
-            "Что будем делать дальше?", reply_markup=start_kb)
+    await bot.answer_callback_query(callback_query.id)
 
-        await callback_query.message.edit_reply_markup(reply_markup=cancel_kb)
-            
-        del photo_buffer[callback_query.from_user.id]
+    if photo_buffer[callback_query.from_user.id].st_type == 1:
+        await callback_query.message.edit_text(
+            "Пришли мне картинку, стиль с которой нужно перенести. " +
+            "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
+        photo_buffer[callback_query.from_user.id].need_photos = 2
 
-    elif MODE == 'NORMAL':
-        await bot.answer_callback_query(callback_query.id)
-
-        if photo_buffer[callback_query.from_user.id].st_type == 1:
-            await callback_query.message.edit_text(
-                "Пришли мне картинку, стиль с которой нужно перенести. " +
-                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
-
-            photo_buffer[callback_query.from_user.id].need_photos = 2
-
-        elif photo_buffer[callback_query.from_user.id].st_type == 2:
-            await callback_query.message.edit_text(
-                "Пришли мне картинку, стиль с которой нужно перенести на левую часть изображения. " +
-                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
-            
-            photo_buffer[callback_query.from_user.id].need_photos = 3
-
-        elif photo_buffer[callback_query.from_user.id].st_type == 'horse2zebra':
-            await callback_query.message.edit_text(
-                "Пришли мне фотографию лошади, и я перекрашу ее в зебру. " +
-                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
-
-            photo_buffer[callback_query.from_user.id].need_photos = 1
-
-        elif photo_buffer[callback_query.from_user.id].st_type == 'vangogh':
-            await callback_query.message.edit_text(
-                "Пришли мне фотографию, и я добавлю на нее стиль Ван Гога. " +
-                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
-
-            photo_buffer[callback_query.from_user.id].need_photos = 1
-
-        elif photo_buffer[callback_query.from_user.id].st_type == 'monet':
-            await callback_query.message.edit_text(
-                "Пришли мне фотографию, и я добавлю на нее стиль Моне. " +
-                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
-
-            photo_buffer[callback_query.from_user.id].need_photos = 1
+    elif photo_buffer[callback_query.from_user.id].st_type == 2:
+        await callback_query.message.edit_text(
+            "Пришли мне картинку, стиль с которой нужно перенести на левую часть изображения. " +
+            "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
         
-        await callback_query.message.edit_reply_markup(reply_markup=cancel_kb)
+        photo_buffer[callback_query.from_user.id].need_photos = 3
 
-        photo_buffer[callback_query.from_user.id].set_default_settings()
+    elif photo_buffer[callback_query.from_user.id].st_type == 'horse2zebra':
+        await callback_query.message.edit_text(
+            "Пришли мне фотографию лошади, и я перекрашу ее в зебру. " +
+            "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
+
+        photo_buffer[callback_query.from_user.id].need_photos = 1
+
+    elif photo_buffer[callback_query.from_user.id].st_type == 'vangogh':
+        await callback_query.message.edit_text(
+            "Пришли мне фотографию, и я добавлю на нее стиль Ван Гога. " +
+            "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
+
+        photo_buffer[callback_query.from_user.id].need_photos = 1
+
+    elif photo_buffer[callback_query.from_user.id].st_type == 'monet':
+        await callback_query.message.edit_text(
+            "Пришли мне фотографию, и я добавлю на нее стиль Моне. " +
+            "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
+
+        photo_buffer[callback_query.from_user.id].need_photos = 1
+    
+    await callback_query.message.edit_reply_markup(reply_markup=cancel_kb)
+
+    photo_buffer[callback_query.from_user.id].set_default_settings()
 
 
 # castom settings
@@ -339,56 +331,48 @@ async def set_num_epochs(callback_query):
 async def load_images(callback_query):
     if MODE == 'EASY':
         await bot.send_message(callback_query.from_user.id, 
-            "В данный момент бот работает в упрощенном режиме, для получения полного функционала бота " +
-            "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы. " + 
-            "Пока можете ознакомится с меню или посетить страницу на github: " +
-            "https://github.com/alresin/Style_transfer_telegram_bot")
+            "В данный момент бот работает в упрощенном режиме. Это означает, что для некоторых операций " + 
+            "боту может не хватить памяти. В такие моменты бот может просто не прислать ответ. " +
+            "Также в данном режиме бот осуществляет NST весьма продолжительное время. " +
+            "Для получения полного функционала бота " +
+            "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы.")
 
-        await bot.send_message(callback_query.from_user.id,
-            "Что будем делать дальше?", reply_markup=start_kb)
+    if photo_buffer[callback_query.from_user.id].st_type == 1:
+        await callback_query.message.edit_text(
+            "Пришли мне картинку, стиль с которой нужно перенeсти. " +
+            "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
-        await callback_query.message.edit_reply_markup(reply_markup=cancel_kb)
-            
-        del photo_buffer[callback_query.from_user.id]
+        photo_buffer[callback_query.from_user.id].need_photos = 2
 
+    elif photo_buffer[callback_query.from_user.id].st_type == 2:
+        await callback_query.message.edit_text(
+            "Пришли мне картинку, стиль с которой нужно перенeсти на левую часть изображения. " +
+            "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
-    elif MODE == 'NORMAL':
-        if photo_buffer[callback_query.from_user.id].st_type == 1:
-            await callback_query.message.edit_text(
-                "Пришли мне картинку, стиль с которой нужно перенeсти. " +
-                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
+        photo_buffer[callback_query.from_user.id].need_photos = 3
 
-            photo_buffer[callback_query.from_user.id].need_photos = 2
+    elif photo_buffer[callback_query.from_user.id].st_type == 'horse2zebra':
+        await callback_query.message.edit_text(
+            "Пришли мне фотографию лошади, и я перекрашу ее в зебру. " +
+            "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
-        elif photo_buffer[callback_query.from_user.id].st_type == 2:
-            await callback_query.message.edit_text(
-                "Пришли мне картинку, стиль с которой нужно перенeсти на левую часть изображения. " +
-                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
+        photo_buffer[callback_query.from_user.id].need_photos = 1
 
-            photo_buffer[callback_query.from_user.id].need_photos = 3
+    elif photo_buffer[callback_query.from_user.id].st_type == 'vangogh':
+        await callback_query.message.edit_text(
+            "Пришли мне фотографию, и я добавлю на нее стиль Ван Гога. " +
+            "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
-        elif photo_buffer[callback_query.from_user.id].st_type == 'horse2zebra':
-            await callback_query.message.edit_text(
-                "Пришли мне фотографию лошади, и я перекрашу ее в зебру. " +
-                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
+        photo_buffer[callback_query.from_user.id].need_photos = 1
 
-            photo_buffer[callback_query.from_user.id].need_photos = 1
+    elif photo_buffer[callback_query.from_user.id].st_type == 'monet':
+        await callback_query.message.edit_text(
+            "Пришли мне фотографию, и я добавлю на нее стиль Моне. " +
+            "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
-        elif photo_buffer[callback_query.from_user.id].st_type == 'vangogh':
-            await callback_query.message.edit_text(
-                "Пришли мне фотографию, и я добавлю на нее стиль Ван Гога. " +
-                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
-
-            photo_buffer[callback_query.from_user.id].need_photos = 1
-
-        elif photo_buffer[callback_query.from_user.id].st_type == 'monet':
-            await callback_query.message.edit_text(
-                "Пришли мне фотографию, и я добавлю на нее стиль Моне. " +
-                "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
-
-            photo_buffer[callback_query.from_user.id].need_photos = 1
-        
-        await callback_query.message.edit_reply_markup(reply_markup=cancel_kb)
+        photo_buffer[callback_query.from_user.id].need_photos = 1
+    
+    await callback_query.message.edit_reply_markup(reply_markup=cancel_kb)
 
 
 # changing epochs number
@@ -430,215 +414,197 @@ async def change_imsize(callback_query):
 # getting image
 @dp.message_handler(content_types=['photo', 'document'])
 async def get_image(message):
-    if MODE == 'EASY':
-        await bot.send_message(message.chat.id, 
-            "В данный момент бот работает в упрощенном режиме, для получения полного функционала бота " +
-            "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы. " + 
-            "Пока можете ознакомится с меню или посетить страницу на github: " +
-            "https://github.com/alresin/Style_transfer_telegram_bot")
+    if message.content_type == 'photo':
+        img = message.photo[-1]
 
+    else:
+        img = message.document
+        if img.mime_type[:5] != 'image':
+            await bot.send_message(message.chat.id,
+                "Загрузи, пожалуйста, файл в формате изображения.",
+                reply_markup=start_kb)
+            return
+
+    file_info = await bot.get_file(img.file_id)
+    photo = await bot.download_file(file_info.file_path)
+
+    if message.chat.id not in photo_buffer:
         await bot.send_message(message.chat.id,
-            "Что будем делать дальше?", reply_markup=start_kb)
-            
-        if message.chat.id in photo_buffer:
-            del photo_buffer[message.chat.id]
+            "Сначала выбери тип style transef`a.", reply_markup=start_kb)
+        return
 
+    if not hasattr(photo_buffer[message.chat.id], 'need_photos' ):
+        await bot.send_message(message.chat.id,
+            "Сначала выбери настройки style transef`a.", reply_markup=settings1_kb)
+        return
 
-    elif MODE == 'NORMAL':
-        if message.content_type == 'photo':
-            img = message.photo[-1]
+    photo_buffer[message.chat.id].photos.append(photo)
 
-        else:
-            img = message.document
-            if img.mime_type[:5] != 'image':
-                await bot.send_message(message.chat.id,
-                    "Загрузи, пожалуйста, файл в формате изображения.",
-                    reply_markup=start_kb)
-                return
+    # single style transfer
+    if photo_buffer[message.chat.id].st_type == 1:
+        if photo_buffer[message.chat.id].need_photos == 2:
+            photo_buffer[message.chat.id].need_photos = 1
 
-        file_info = await bot.get_file(img.file_id)
-        photo = await bot.download_file(file_info.file_path)
-
-        if message.chat.id not in photo_buffer:
             await bot.send_message(message.chat.id,
-                "Сначала выбери тип style transef`a.", reply_markup=start_kb)
-            return
+                "Отлично, теперь пришли мне картинку, на которую нужно перенести этот стиль. " +
+                "Для лучшего качества изображения лучше загружать как документ.",
+                reply_markup=cancel_kb)
 
-        if not hasattr(photo_buffer[message.chat.id], 'need_photos' ):
-            await bot.send_message(message.chat.id,
-                "Сначала выбери настройки style transef`a.", reply_markup=settings1_kb)
-            return
-
-        photo_buffer[message.chat.id].photos.append(photo)
-
-        # single style transfer
-        if photo_buffer[message.chat.id].st_type == 1:
-            if photo_buffer[message.chat.id].need_photos == 2:
-                photo_buffer[message.chat.id].need_photos = 1
-
-                await bot.send_message(message.chat.id,
-                    "Отлично, теперь пришли мне картинку, на которую нужно перенести этот стиль. " +
-                    "Для лучшего качества изображения лучше загружать как документ.",
-                    reply_markup=cancel_kb)
-
-            elif photo_buffer[message.chat.id].need_photos == 1:
-                await bot.send_message(message.chat.id, "Начинаю обрабатывать...")
-
-                # for debug
-                log(photo_buffer[message.chat.id])
-
-                try:
-                    output = await style_transfer(Simple_style_transfer, photo_buffer[message.chat.id],
-                        *photo_buffer[message.chat.id].photos)
-
-                    await bot.send_document(message.chat.id, deepcopy(output))
-                    await bot.send_photo(message.chat.id, output)
-
-                except RuntimeError as err:
-                    if str(err)[:19] == 'CUDA out of memory.':
-                        await bot.send_message(message.chat.id,
-                            "Произошла ошибка. У меня не хватает памяти, чтобы осуществить это действие. " +
-                            "Чтобы избежать этого попробуй уменьшить размер изображения или количество эпох " +
-                            "в расширенных настройках.")
-                        
-                    else:
-                        if GET_DEBUG_INFO:
-                            await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
-                            await bot.send_message(message.chat.id,
-                                "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
-
-                        else:
-                            await bot.send_message(message.chat.id,
-                                    "Произошла ошибка.")
-
-                except Exception as err:
-                    if GET_DEBUG_INFO:
-                        await bot.send_message(message.chat.id,
-                                "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
-                        await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
-
-                    else:
-                        await bot.send_message(message.chat.id,
-                                "Произошла ошибка.")
-
-                await bot.send_message(message.chat.id,
-                    "Что будем делать дальше?", reply_markup=start_kb)
-            
-                del photo_buffer[message.chat.id]
-
-        # double style transfer
-        elif photo_buffer[message.chat.id].st_type == 2:
-            if photo_buffer[message.chat.id].need_photos == 3:
-                photo_buffer[message.chat.id].need_photos = 2
-
-                await bot.send_message(message.chat.id,
-                    "Отлично, теперь пришли мне картинку, стиль с которой " + 
-                    "нужно перенести на правую часть изображения. " +
-                    "Для лучшего качества изображения лучше загружать как документ.",
-                    reply_markup=cancel_kb)
-        
-            elif photo_buffer[message.chat.id].need_photos == 2:
-                photo_buffer[message.chat.id].need_photos = 1
-
-                await bot.send_message(message.chat.id,
-                    "Отлично, теперь пришли мне картинку, на которую нужно перенести эти стили. " +
-                    "Для лучшего качества изображения лучше загружать как документ.",
-                    reply_markup=cancel_kb)
-
-            elif photo_buffer[message.chat.id].need_photos == 1:
-                await bot.send_message(message.chat.id, "Начинаю обрабатывать...")
-
-                # for debug
-                log(photo_buffer[message.chat.id])
-
-                try:
-                    output = await style_transfer(Double_style_transfer, photo_buffer[message.chat.id],
-                                                *photo_buffer[message.chat.id].photos)
-
-                    await bot.send_document(message.chat.id, deepcopy(output))
-                    await bot.send_photo(message.chat.id, output)
-
-                except RuntimeError as err:
-                    if str(err)[:19] == 'CUDA out of memory.':
-                        await bot.send_message(message.chat.id,
-                            "Произошла ошибка. У меня не хватает памяти, чтобы осуществить это действие. " +
-                            "Чтобы избежать этого попробуй уменьшить размер изображения или количество эпох " +
-                            "в расширенных настройках.")
-
-                    else:
-                        if GET_DEBUG_INFO:
-                            await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
-                            await bot.send_message(message.chat.id,
-                                "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
-
-                        else:
-                            await bot.send_message(message.chat.id,
-                                    "Произошла ошибка.")
-
-                except Exception as err:
-                    if GET_DEBUG_INFO:
-                        await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
-                        await bot.send_message(message.chat.id,
-                                "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
-
-                    else:
-                        await bot.send_message(message.chat.id,
-                                "Произошла ошибка.")
-
-
-                await bot.send_message(message.chat.id,
-                    "Что будем делать дальше?", reply_markup=start_kb)
-
-                del photo_buffer[message.chat.id]
-
-        # GAN horse2zebra or vangogh or monet
-        elif photo_buffer[message.chat.id].st_type in ['horse2zebra', 'vangogh', 'monet'] and \
-            photo_buffer[message.chat.id].need_photos == 1:
+        elif photo_buffer[message.chat.id].need_photos == 1:
             await bot.send_message(message.chat.id, "Начинаю обрабатывать...")
 
             # for debug
             log(photo_buffer[message.chat.id])
 
+            try:
+                output = await style_transfer(Simple_style_transfer, photo_buffer[message.chat.id],
+                    *photo_buffer[message.chat.id].photos)
+
+                await bot.send_document(message.chat.id, deepcopy(output))
+                await bot.send_photo(message.chat.id, output)
+
+            except RuntimeError as err:
+                if str(err)[:19] == 'CUDA out of memory.':
+                    await bot.send_message(message.chat.id,
+                        "Произошла ошибка. У меня не хватает памяти, чтобы осуществить это действие. " +
+                        "Чтобы избежать этого попробуй уменьшить размер изображения или количество эпох " +
+                        "в расширенных настройках.")
+
+                else:
+                    if GET_DEBUG_INFO:
+                        await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                        await bot.send_message(message.chat.id,
+                            "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
+
+                    else:
+                        await bot.send_message(message.chat.id,
+                                "Произошла ошибка.")
+
+            except Exception as err:
+                if GET_DEBUG_INFO:
+                    await bot.send_message(message.chat.id,
+                            "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
+                    await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+
+                else:
+                    await bot.send_message(message.chat.id,
+                            "Произошла ошибка.")
+
+            await bot.send_message(message.chat.id,
+                "Что будем делать дальше?", reply_markup=start_kb)
+        
+            del photo_buffer[message.chat.id]
+
+    # double style transfer
+    elif photo_buffer[message.chat.id].st_type == 2:
+        if photo_buffer[message.chat.id].need_photos == 3:
+            photo_buffer[message.chat.id].need_photos = 2
+
+            await bot.send_message(message.chat.id,
+                "Отлично, теперь пришли мне картинку, стиль с которой " + 
+                "нужно перенести на правую часть изображения. " +
+                "Для лучшего качества изображения лучше загружать как документ.",
+                reply_markup=cancel_kb)
+    
+        elif photo_buffer[message.chat.id].need_photos == 2:
+            photo_buffer[message.chat.id].need_photos = 1
+
+            await bot.send_message(message.chat.id,
+                "Отлично, теперь пришли мне картинку, на которую нужно перенести эти стили. " +
+                "Для лучшего качества изображения лучше загружать как документ.",
+                reply_markup=cancel_kb)
+
+        elif photo_buffer[message.chat.id].need_photos == 1:
+            await bot.send_message(message.chat.id, "Начинаю обрабатывать...")
+
+            # for debug
+            log(photo_buffer[message.chat.id])
+
+            try:
+                output = await style_transfer(Double_style_transfer, photo_buffer[message.chat.id],
+                                            *photo_buffer[message.chat.id].photos)
+
+                await bot.send_document(message.chat.id, deepcopy(output))
+                await bot.send_photo(message.chat.id, output)
+
+            except RuntimeError as err:
+                if str(err)[:19] == 'CUDA out of memory.':
+                    await bot.send_message(message.chat.id,
+                        "Произошла ошибка. У меня не хватает памяти, чтобы осуществить это действие. " +
+                        "Чтобы избежать этого попробуй уменьшить размер изображения или количество эпох " +
+                        "в расширенных настройках.")
+
+                else:
+                    if GET_DEBUG_INFO:
+                        await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                        await bot.send_message(message.chat.id,
+                            "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
+
+                    else:
+                        await bot.send_message(message.chat.id,
+                                "Произошла ошибка.")
+
+            except Exception as err:
+                if GET_DEBUG_INFO:
+                    await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+                    await bot.send_message(message.chat.id,
+                            "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
+
+                else:
+                    await bot.send_message(message.chat.id,
+                            "Произошла ошибка.")
+
+
+            await bot.send_message(message.chat.id,
+                "Что будем делать дальше?", reply_markup=start_kb)
+
+            del photo_buffer[message.chat.id]
+
+    # GAN horse2zebra or vangogh or monet
+    elif photo_buffer[message.chat.id].st_type in ['horse2zebra', 'vangogh', 'monet'] and \
+        photo_buffer[message.chat.id].need_photos == 1:
+        await bot.send_message(message.chat.id, "Начинаю обрабатывать...")
+
+        # for debug
+        log(photo_buffer[message.chat.id])
+
+        try:
             output = gan_transfer(photo_buffer[message.chat.id],
                                         photo_buffer[message.chat.id].photos[0])
 
             await bot.send_document(message.chat.id, deepcopy(output))
             await bot.send_photo(message.chat.id, output)
-
-            '''
-            try:
-                
-                
-            except RuntimeError as err:
-                    if str(err)[:19] == 'CUDA out of memory.':
+            
+            
+        except RuntimeError as err:
+                if str(err)[:19] == 'CUDA out of memory.':
+                    await bot.send_message(message.chat.id,
+                        "Произошла ошибка. У меня не хватает памяти, чтобы осуществить это действие. " +
+                        "Чтобы избежать этого попробуй уменьшить размер изображения " +
+                        "в расширенных настройках.")
+                    
+                else:
+                    if GET_DEBUG_INFO:
+                        await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
                         await bot.send_message(message.chat.id,
-                            "Произошла ошибка. У меня не хватает памяти, чтобы осуществить это действие. " +
-                            "Чтобы избежать этого попробуй уменьшить размер изображения " +
-                            "в расширенных настройках.")
-                        
-                    else:
-                        if GET_DEBUG_INFO:
-                            await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
-                            await bot.send_message(message.chat.id,
-                                "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
-
-                        else:
-                            await bot.send_message(message.chat.id,
-                                    "Произошла ошибка.")
-
-            except Exception as err:
-                await bot.send_message(message.chat.id,
                             "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
 
-                if GET_DEBUG_INFO:
-                    await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
-            '''
+                    else:
+                        await bot.send_message(message.chat.id,
+                                "Произошла ошибка.")
 
-
+        except Exception as err:
             await bot.send_message(message.chat.id,
-                    "Что будем делать дальше?", reply_markup=start_kb)
+                        "Произошла ошибка. Сообщение об ошибке отправлено создателю бота.")
 
-            del photo_buffer[message.chat.id]
+            if GET_DEBUG_INFO:
+                await bot.send_message(DEBUG_ID, "Произошла ошибка: " + str(err))
+
+
+        await bot.send_message(message.chat.id,
+                "Что будем делать дальше?", reply_markup=start_kb)
+
+        del photo_buffer[message.chat.id]
 
 
 # text error
