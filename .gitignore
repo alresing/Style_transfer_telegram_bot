@@ -4,12 +4,10 @@
 
 __pycache__/
 /checkpoints/
-/images/
 /data/
 /models/
 /options/
 /util/
-
 
 my_models/horse2zebra.pth
 my_models/monet.pth

@@ -1,4 +1,4 @@
-# Style_transfer_telegram_bot
+# Style transfer telegram bot
 Этот бот для телеграма переносит стиль с одних фотографий на другие.
 
 Пообщаться с ботом в телеграме: @AlresingFirstBot.
