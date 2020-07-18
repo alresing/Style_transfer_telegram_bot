@@ -108,6 +108,14 @@ cancel_kb = InlineKeyboardMarkup()
 cancel_kb.add( InlineKeyboardButton('Отмена', callback_data='main_menu'))
 
 
+# warning text for EASY MODE
+EASY_MODE_TEXT = "В данный момент бот работает в упрощенном режиме. Это означает, что для некоторых операций " + \
+                "боту может не хватить памяти. В такие моменты бот может просто не прислать ответ. " + \
+                "Также в данном режиме бот осуществляет NST весьма продолжительное время. " + \
+                "Для получения полного функционала бота " + \
+                "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы.\n\n"
+
+
 
 # start
 @dp.message_handler(commands=['start'])
@@ -222,46 +230,40 @@ async def winter2summer(callback_query):
 # default settings
 @dp.callback_query_handler(lambda c: c.data == 'default')
 async def default_set(callback_query):
-    if MODE == 'EASY':
-        await bot.send_message(callback_query.from_user.id, 
-            "В данный момент бот работает в упрощенном режиме. Это означает, что для некоторых операций " + 
-            "боту может не хватить памяти. В такие моменты бот может просто не прислать ответ. " +
-            "Также в данном режиме бот осуществляет NST весьма продолжительное время. " +
-            "Для получения полного функционала бота " +
-            "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы.")
+    extra_text = EASY_MODE_TEXT if MODE == 'EASY' else '' 
 
     await bot.answer_callback_query(callback_query.id)
 
     if photo_buffer[callback_query.from_user.id].st_type == 1:
-        await callback_query.message.edit_text(
+        await callback_query.message.edit_text( extra_text +
             "Пришли мне картинку, стиль с которой нужно перенести. " +
             "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
         photo_buffer[callback_query.from_user.id].need_photos = 2
 
     elif photo_buffer[callback_query.from_user.id].st_type == 2:
-        await callback_query.message.edit_text(
+        await callback_query.message.edit_text( extra_text +
             "Пришли мне картинку, стиль с которой нужно перенести на левую часть изображения. " +
             "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
         
         photo_buffer[callback_query.from_user.id].need_photos = 3
 
     elif photo_buffer[callback_query.from_user.id].st_type == 'horse2zebra':
-        await callback_query.message.edit_text(
+        await callback_query.message.edit_text( extra_text +
             "Пришли мне фотографию лошади, и я перекрашу ее в зебру. " +
             "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
         photo_buffer[callback_query.from_user.id].need_photos = 1
 
     elif photo_buffer[callback_query.from_user.id].st_type == 'vangogh':
-        await callback_query.message.edit_text(
+        await callback_query.message.edit_text( extra_text +
             "Пришли мне фотографию, и я добавлю на нее стиль Ван Гога. " +
             "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
         photo_buffer[callback_query.from_user.id].need_photos = 1
 
     elif photo_buffer[callback_query.from_user.id].st_type == 'monet':
-        await callback_query.message.edit_text(
+        await callback_query.message.edit_text( extra_text +
             "Пришли мне фотографию, и я добавлю на нее стиль Моне. " +
             "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
@@ -329,44 +331,38 @@ async def set_num_epochs(callback_query):
 # load images
 @dp.callback_query_handler(lambda c: c.data == 'next')
 async def load_images(callback_query):
-    if MODE == 'EASY':
-        await bot.send_message(callback_query.from_user.id, 
-            "В данный момент бот работает в упрощенном режиме. Это означает, что для некоторых операций " + 
-            "боту может не хватить памяти. В такие моменты бот может просто не прислать ответ. " +
-            "Также в данном режиме бот осуществляет NST весьма продолжительное время. " +
-            "Для получения полного функционала бота " +
-            "свяжитесь с создателем бота с целью перевести бота в нормальный режим работы.")
+    extra_text = EASY_MODE_TEXT if MODE == 'EASY' else '' 
 
     if photo_buffer[callback_query.from_user.id].st_type == 1:
-        await callback_query.message.edit_text(
+        await callback_query.message.edit_text( extra_text +
             "Пришли мне картинку, стиль с которой нужно перенeсти. " +
             "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
         photo_buffer[callback_query.from_user.id].need_photos = 2
 
     elif photo_buffer[callback_query.from_user.id].st_type == 2:
-        await callback_query.message.edit_text(
+        await callback_query.message.edit_text( extra_text +
             "Пришли мне картинку, стиль с которой нужно перенeсти на левую часть изображения. " +
             "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
         photo_buffer[callback_query.from_user.id].need_photos = 3
 
     elif photo_buffer[callback_query.from_user.id].st_type == 'horse2zebra':
-        await callback_query.message.edit_text(
+        await callback_query.message.edit_text( extra_text +
             "Пришли мне фотографию лошади, и я перекрашу ее в зебру. " +
             "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
         photo_buffer[callback_query.from_user.id].need_photos = 1
 
     elif photo_buffer[callback_query.from_user.id].st_type == 'vangogh':
-        await callback_query.message.edit_text(
+        await callback_query.message.edit_text( extra_text +
             "Пришли мне фотографию, и я добавлю на нее стиль Ван Гога. " +
             "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
         photo_buffer[callback_query.from_user.id].need_photos = 1
 
     elif photo_buffer[callback_query.from_user.id].st_type == 'monet':
-        await callback_query.message.edit_text(
+        await callback_query.message.edit_text( extra_text +
             "Пришли мне фотографию, и я добавлю на нее стиль Моне. " +
             "Очень настоятельно рекомендую для хорошего качества присылать изображение как документ.")
 
