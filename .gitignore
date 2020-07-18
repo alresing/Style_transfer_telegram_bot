@@ -9,3 +9,8 @@ __pycache__/
 /data/
 /options/
 /util/
+
+/models/__init__.py
+/models/base_model.py
+/models/cycle_gan_model.py
+/models/test_model.py
