@@ -7,7 +7,7 @@ from PIL import Image
 import os
 
 
-def transfer(img_path, style, imsize = 256, logging = True):
+def transfer(img_path, style, imsize = 256):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model = torch.load('./my_models/' + style + '.pth').to(device)

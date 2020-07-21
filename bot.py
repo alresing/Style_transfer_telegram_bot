@@ -648,8 +648,7 @@ async def style_transfer(st_class, user,*imgs):
 def gan_transfer(user, img):
     output = transfer(img,
             style = user.st_type,
-            imsize = user.settings['imsize'],
-            logging = LOGGING_GAN)
+            imsize = user.settings['imsize'])
 
     return tensor2img(output.add(1).div(2))
 
